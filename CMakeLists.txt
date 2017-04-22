@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.11)
-project(PARTICLE_FILTER)
+project(Particle_Filter)
 
 
 # Build the particle filter project and solution.
@@ -11,7 +11,8 @@ set_source_files_properties(${SRCS} PROPERTIES COMPILE_FLAGS -std=c++0x)
 add_executable(particle_filter ${SRCS})
 
 # Use C++11
-
+add_definitions(-std=c++14)
+add_definitions(-stdlib=libc++)
 #if [ ! -f ./src/particle_filter_sol.cpp]; then
 #	echo "No solution file."
 #else

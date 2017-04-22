@@ -9,7 +9,10 @@
 #ifndef PARTICLE_FILTER_H_
 #define PARTICLE_FILTER_H_
 
+#include <random>
 #include "helper_functions.h"
+
+using std::default_random_engine;
 
 struct Particle {
 
@@ -20,7 +23,7 @@ struct Particle {
 	double weight;
 };
 
-
+using vector_t = std::vector<double>;
 
 class ParticleFilter {
 	
@@ -34,7 +37,9 @@ class ParticleFilter {
 	
 	// Vector of weights of all particles
 	std::vector<double> weights;
-	
+
+	// Random number generator
+	default_random_engine gen_;
 public:
 	
 	// Set of current particles
@@ -75,9 +80,10 @@ public:
 	 * @param predicted Vector of predicted landmark observations
 	 * @param observations Vector of landmark observations
 	 */
-	void dataAssociation(std::vector<LandmarkObs> predicted, std::vector<LandmarkObs>& observations);
-	
-	/**
+  std::vector<LandmarkObs> dataAssociation(std::vector<LandmarkObs> &predicted, const std::vector<LandmarkObs> &observations);
+
+
+  /**
 	 * updateWeights Updates the weights for each particle based on the likelihood of the 
 	 *   observed measurements. 
 	 * @param sensor_range Range [m] of sensor
