@@ -152,18 +152,18 @@ int main() {
 			}
 		}
 
-    // Write particle data for visualization
-    ostringstream particle_file;
-    particle_file << "data/particles/particles_" << setfill('0') << setw(6) << i+1 << ".txt";
-    std::ofstream dataFile;
-    dataFile.open(particle_file.str(), std::ios::trunc);
-    for (int k = 0; k < pf.particles.size(); ++k) {
-      auto p = pf.particles[k];
-      dataFile << p.x << " " << p.y << " " << p.theta << " ";
-      dataFile << p.weight << " " << gt[i].x << " " << gt[i].y << " ";
-      dataFile << gt[i].theta << std::endl;
-    }
-    dataFile.close();
+//    // Write particle data for visualization
+//    ostringstream particle_file;
+//    particle_file << "data/particles/particles_" << setfill('0') << setw(6) << i+1 << ".txt";
+//    std::ofstream dataFile;
+//    dataFile.open(particle_file.str(), std::ios::trunc);
+//    for (int k = 0; k < pf.particles.size(); ++k) {
+//      auto p = pf.particles[k];
+//      dataFile << p.x << " " << p.y << " " << p.theta << " ";
+//      dataFile << p.weight << " " << gt[i].x << " " << gt[i].y << " ";
+//      dataFile << gt[i].theta << std::endl;
+//    }
+//    dataFile.close();
 	}
 	
 	// Output the runtime for the filter.
