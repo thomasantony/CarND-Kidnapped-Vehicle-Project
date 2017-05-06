@@ -11,6 +11,11 @@
 #include <iostream>
 #include <tuple>
 #include <numeric>
+#include <math.h>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <iterator>
 
 #include "particle_filter.h"
 
@@ -35,7 +40,7 @@ const vector_t CTRV_ModelFunc(double delta_t, const vector_t& x, const vector_t&
   normal_distribution<double> dist_x(0, std_pos[0]);
   normal_distribution<double> dist_y(0, std_pos[1]);
   normal_distribution<double> dist_yaw(0, std_pos[2]);
-  
+
   //extract values for better readability
   double p_x = x[0];
   double p_y = x[1];
@@ -67,6 +72,8 @@ const vector_t CTRV_ModelFunc(double delta_t, const vector_t& x, const vector_t&
   //return predicted state
   return {px_p, py_p, pyaw_p};
 }
+
+using namespace std;
 
 void ParticleFilter::init(double x, double y, double theta, double std[]) {
   // Add random Gaussian noise to each particle.
@@ -150,7 +157,7 @@ inline const double gaussian_2d(const LandmarkObs& obs, const LandmarkObs &lm, c
   auto dy = (obs.y - lm.y);
   return exp(-(dx*dx/(2*cov_x) + dy*dy/(2*cov_y)))/normalizer;
 }
-void ParticleFilter::updateWeights(double sensor_range, double std_landmark[], 
+void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 		std::vector<LandmarkObs> observations, Map map_landmarks) {
   double sigma_landmark [2] = {0.3, 0.3}; // Landmark measurement uncertainty [x [m], y [m]]
 
@@ -212,12 +219,49 @@ void ParticleFilter::resample() {
   particles = std::move(new_particles);
 }
 
-void ParticleFilter::write(std::string filename) {
-	// You don't need to modify this file.
-	std::ofstream dataFile;
-	dataFile.open(filename, std::ios::app);
-	for (int i = 0; i < num_particles; ++i) {
-		dataFile << particles[i].x << " " << particles[i].y << " " << particles[i].theta << "\n";
-	}
-	dataFile.close();
+Particle ParticleFilter::SetAssociations(Particle particle, std::vector<int> associations, std::vector<double> sense_x, std::vector<double> sense_y)
+{
+	//particle: the particle to assign each listed association, and association's (x,y) world coordinates mapping to
+	// associations: The landmark id that goes along with each listed association
+	// sense_x: the associations x mapping already converted to world coordinates
+	// sense_y: the associations y mapping already converted to world coordinates
+
+	//Clear the previous associations
+	particle.associations.clear();
+	particle.sense_x.clear();
+	particle.sense_y.clear();
+
+	particle.associations= associations;
+ 	particle.sense_x = sense_x;
+ 	particle.sense_y = sense_y;
+
+ 	return particle;
+}
+
+string ParticleFilter::getAssociations(Particle best)
+{
+	vector<int> v = best.associations;
+	stringstream ss;
+    copy( v.begin(), v.end(), ostream_iterator<int>(ss, " "));
+    string s = ss.str();
+    s = s.substr(0, s.length()-1);  // get rid of the trailing space
+    return s;
+}
+string ParticleFilter::getSenseX(Particle best)
+{
+	vector<double> v = best.sense_x;
+	stringstream ss;
+    copy( v.begin(), v.end(), ostream_iterator<float>(ss, " "));
+    string s = ss.str();
+    s = s.substr(0, s.length()-1);  // get rid of the trailing space
+    return s;
+}
+string ParticleFilter::getSenseY(Particle best)
+{
+	vector<double> v = best.sense_y;
+	stringstream ss;
+    copy( v.begin(), v.end(), ostream_iterator<float>(ss, " "));
+    string s = ss.str();
+    s = s.substr(0, s.length()-1);  // get rid of the trailing space
+    return s;
 }
